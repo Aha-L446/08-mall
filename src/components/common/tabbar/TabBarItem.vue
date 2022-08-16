@@ -43,6 +43,7 @@
     text-align: center;
     flex: 1;
     font-size: 14px;
+    color: #000;
   }
   .tab-bar-item img {
     width: 24px;
@@ -52,6 +53,6 @@
     margin-bottom: 2px;
   }
   .active {
-    color: green;
+    color: #ff5777;
   }
 </style>
