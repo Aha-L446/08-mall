@@ -6,7 +6,8 @@
     <div v-else>
       <slot name="item-icon-active"></slot>
     </div>
-    <div :class="{active: isActive}">
+    <!-- <div :class="{active: isActive}"> -->
+    <div :class="{defaultClass: !isActive, activeClass: isActive}">
       <slot name="item-text"></slot>
     </div>
   </div>
@@ -14,13 +15,10 @@
 
 <script>
   export default {
-    data() {
-      return {
-        // isActive: true
-      }
-    },
     props: {
-      path: String
+      path: String,
+      defaultClass: Object,
+      activeClass: Object
     },
     computed: {
       isActive() {
@@ -43,7 +41,7 @@
     text-align: center;
     flex: 1;
     font-size: 14px;
-    color: #000;
+    /* color: #000; */
   }
   .tab-bar-item img {
     width: 24px;
@@ -52,7 +50,7 @@
     margin-top: 3px;
     margin-bottom: 2px;
   }
-  .active {
+  /* .active {
     color: #ff5777;
-  }
+  } */
 </style>
