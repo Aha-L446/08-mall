@@ -1,6 +1,6 @@
 <template>
   <swiper>
-    <swiper-item v-for="item in banner">
+    <swiper-item v-for="(item, index) in banner" :key="index">
       <a :href="item.link">
         <img :src="item.image" alt="" @load="imageLoad">
       </a>
@@ -33,8 +33,8 @@
     methods: {
       imageLoad() {
         if (!this.isLoad) {
-          this.$emit('swiperImageLoad')
-          this.isLoad = true
+          this.$emit('swiperImageLoad'); // 只需发送一次，这里只需要监听加载完成一个图片就可以了，不需要使用防抖
+          this.isLoad = true;
         }
       }
     }

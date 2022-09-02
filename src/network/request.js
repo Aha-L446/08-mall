@@ -19,3 +19,24 @@ export function request(config) {
 
   return instance(config);
 }
+
+export function request2(config) {
+  const instance = axios.create({
+    // baseURL: 'https://ym.191ec.com/silver-web-shop'
+    baseURL: ''
+  })
+
+  instance.interceptors.request.use((config) => {
+    return config;     // 【拦截后，这里必须return，否则调用request()时，没有相应的信息返回
+  }, (res) => {
+    return res;
+  })
+
+  instance.interceptors.response.use((config) => {
+    return config;     // 【拦截后，这里必须return，否则调用request()时，没有相应的信息返回
+  }, (res) => {
+    return res;
+  })
+
+  return instance(config);
+}

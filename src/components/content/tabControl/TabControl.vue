@@ -1,9 +1,9 @@
 <template>
   <div class="tab-control">
     <div v-for="(item, index) in tabControlArray" :key="index"
-        :class="{active: currIndex === index}"
-        @click="changeIndex(index)">
-      <span>{{item}}</span>
+        :class="{active: currName === item.name}"
+        @click="changeIndex(item.name)">
+      <span>{{item.value}}</span>
     </div>
   </div>
 </template>
@@ -21,12 +21,16 @@
     },
     data() {
       return {
-        currIndex: 0
+        currName: ''
       }
     },
+    created() {
+      this.currName = this.tabControlArray[0].name; // 获取第一个菜单
+    },
     methods: {
-      changeIndex(index) {
-        this.currIndex = index;
+      changeIndex(name) {
+        this.currName = name;
+        this.$emit("currName", name);
       }
     }
   }
@@ -36,6 +40,7 @@
   .tab-control {
     display: flex;
     line-height: 40px;
+    background: #fff;
   }
   .tab-control > div {
     flex: 1;
