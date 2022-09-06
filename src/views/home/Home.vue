@@ -81,13 +81,13 @@
       this.homeMultidata();
 
       // 2、请求商品数据
-      this.homeGoods({firstType: 1}, 'pop');
-      this.homeGoods({firstType: 4}, 'new');
-      this.homeGoods({firstType: 7}, 'sell');
+      this.homeGoods('pop');
+      this.homeGoods('new');
+      this.homeGoods('sell');
     },
     mounted() { // 组件挂载，但不包括图片的加载
-      var refresh = debounce(this.$refs.scroll.runRefresh, 500);
-      // 3、监听 GoodsListItem.vue 图片加载
+      var refresh = debounce(this.$refs.scroll.runRefresh, 500); // 实例化抖动函数
+      // 1、监听 GoodsListItem.vue 图片加载
       this.$bus.$on('itemImgLoad', () => {
         // this.$refs.scroll.runRefresh();
         refresh();
@@ -116,21 +116,35 @@
           this.recommend = [];
         })
       },
-      homeGoods(data, key) {
-        data.page = this.goods[key].page + 1;
-        getHomeGoods(data).then((res) => {
-          if (res.data.status == 1) {
-            if (res.data.datas.rows && res.data.datas.rows.length > 0) {
-              this.goods[key].page++;
-              this.goods[key].list.push(...res.data.datas.rows);
-            } else {
-              this.goods[key].finish = true;
-            }
+      homeGoods(key) {
+        if (!this.goods[key].finish) {
+          let data = {};
+          switch(key) {
+            case 'pop':
+              data.firstType = 1;
+              break;
+            case 'new':
+              data.firstType = 4;
+              break;
+            case 'sell':
+              data.firstType = 7;
+              break;
           }
-          this.$refs.scroll.runFinishPullUp();
-        }).catch(() => {
-          this.$refs.scroll.runFinishPullUp();
-        })
+          data.page = this.goods[key].page + 1;
+          getHomeGoods(data).then((res) => {
+            if (res.data.status == 1) {
+              if (res.data.datas.rows && res.data.datas.rows.length > 0) {
+                this.goods[key].page++;
+                this.goods[key].list.push(...res.data.datas.rows);
+              } else {
+                this.goods[key].finish = true;
+              }
+            }
+            this.$refs.scroll.runFinishPullUp();
+          }).catch(() => {
+            this.$refs.scroll.runFinishPullUp();
+          })
+        }
       },
       /**
        * 事件监听相关方法
@@ -152,30 +166,14 @@
         // 2、判断tabControl是否吸顶
         this.isTabFixed = (-position.y) > this.offsetTop;
       },
+      // 拉到底部后，加载商品 -- $emit
+      loadMoreFun() {
+        this.homeGoods(this.currkey);
+      },
       // 回到底部
       backTopFun() {
         // this.$refs.scroll.scroll.scrollTo(0, 0, 500); // x, y, ms
         this.$refs.scroll.runScrollTo(0, 0);
-      },
-      // 拉到底部后，加载商品 -- $emit
-      loadMoreFun() {
-        switch(this.currkey) {
-          case 'pop':
-            if (!this.goods['pop'].finish) {
-              this.homeGoods({firstType: 1}, 'pop');
-            }
-            break;
-          case 'new':
-            if (!this.goods['new'].finish) {
-              this.homeGoods({firstType: 4}, 'new');
-            }
-            break;
-          case 'sell':
-            if (!this.goods['sell'].finish) {
-              this.homeGoods({firstType: 7}, 'sell');
-            }
-            break;
-        }
       },
       // 监听轮播图加载
       swiperImageLoadFun() {
