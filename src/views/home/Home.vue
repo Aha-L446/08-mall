@@ -34,7 +34,8 @@
 
   import {getHomeMultidata, getHomeGoods} from 'network/home.js'
   // import * as homeApi from 'network/home.js'
-  import {debounce} from 'common/utils.js'
+  // import {debounce} from 'common/utils.js'
+  import {mixin} from 'common/mixin'
 
   export default {
     name: 'home',
@@ -48,6 +49,7 @@
       Scroll,
       BackTop
     },
+    mixins: [mixin],
     data() {
       return {
         banner: [],
@@ -71,7 +73,15 @@
         showBackTop: false, // 回到顶部
         offsetTop: 0, // tabControl的offsetTop
         isTabFixed: false, // tabControl是否吸顶
+        // itemImgLoadFun: null // 事件总线回调的方法--已加入混入
       }
+    },
+    activated() { // 活跃
+
+    },
+    deactivated() { // 不活跃
+      // 取消事件总线的监听，【$off(事件名, 需要取消的回调方法)】
+      this.$bus.$off('itemImgLoad', this.itemImgLoadFun);
     },
     beforeCreate() {
 
@@ -86,12 +96,15 @@
       this.homeGoods('sell');
     },
     mounted() { // 组件挂载，但不包括图片的加载
-      var refresh = debounce(this.$refs.scroll.runRefresh, 500); // 实例化抖动函数
-      // 1、监听 GoodsListItem.vue 图片加载
-      this.$bus.$on('itemImgLoad', () => {
-        // this.$refs.scroll.runRefresh();
-        refresh();
-      });
+      /**
+       * 已加到混入中去
+       */
+      // var refresh = debounce(this.$refs.scroll.runRefresh, 500); // 实例化抖动函数
+      // // 1、监听 GoodsListItem.vue 图片加载
+      // this.itemImgLoadFun = () => {
+      //   refresh();
+      // }
+      // this.$bus.$on('itemImgLoad', this.itemImgLoadFun);
     },
     computed: {
       showGoods() {
