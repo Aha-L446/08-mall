@@ -99,10 +99,10 @@
       /**
        * 已加到混入中去
        */
-      // var refresh = debounce(this.$refs.scroll.runRefresh, 500); // 实例化抖动函数
+      // var refreshObject = debounce(this.$refs.scroll.runRefresh, 500); // 实例化抖动函数
       // // 1、监听 GoodsListItem.vue 图片加载
       // this.itemImgLoadFun = () => {
-      //   refresh();
+      //   refreshObject();
       // }
       // this.$bus.$on('itemImgLoad', this.itemImgLoadFun);
     },
